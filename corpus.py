@@ -11,14 +11,15 @@ app = Flask(__name__)
 cwd = os.getcwd()
 os.chdir("corpus")
 corpus = []
-for file in tqdm(os.listdir()[:5]):
+for file in tqdm(os.listdir()[:5]):   # берем первые пять книжек, потому что и так получается большой корпус, и если взять все, то очень много времени занимает парсинг
     with jsonlines.open(file) as reader:
         corpus.append(*reader)
 
+# собираем множество частей речи, которые выделил spacy
 poses = set()
 for book in tqdm(corpus):
     for sentence in book["content"]:
-        poses |= set([word["pos"] for word in sentence])
+        poses |= set([word["pos"] for word in sentence]) 
 os.chdir(cwd)
 
 
@@ -26,7 +27,7 @@ os.chdir(cwd)
 def site():
     return redirect(url_for('search'))
 
-
+# страница поиска
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
