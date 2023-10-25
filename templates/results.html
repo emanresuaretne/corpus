@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Results</title>
+		<style>
+			body {
+				justify-content: center;
+				align-items: center;
+				margin: 0;
+				height: 90vh;
+			}
+			p {
+				padding-left: 1.5vw;
+				color: white;
+				margin: 0.3rem;
+			}
+			h1 {
+				margin-bottom: 10px;
+				justify-content: center;
+				display: flex;
+			}
+			h2 {
+				margin-bottom: 10px;
+				flex: 1;
+			}
+			#results, #to_search_button {
+				display: grid;
+				gap: 5px;
+				justify-content: center;
+			}
+			#result {
+				background-color: #9693E2;
+				border-radius: 1rem;
+				padding: 0.1rem 0.3rem;
+				max-width: 75%;
+				margin-left: 12.5%;
+			}
+			button {
+				background-color: #504D9C;
+				border-radius: 1rem;
+				border-width: 0;
+				padding: 0.1rem 0.3rem;
+				margin-top: 5%;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<h1>
+				Results Page
+			</h1>
+			<div>
+				<p style="color: black; margin-left: 12.5%;">
+					<b style="color: #504D9C;">
+						{{ results|length }}
+					</b>
+					 results were found:
+				</p>
+			</div>
+			<div id='results'>
+				{% for result in range(0, results|length) %}
+					<div id='result'>
+						<div>
+							<p>
+								{{ results[result][0][0] }}
+								<b style="color: #504D9C;">
+									{{ results[result][0][1] }}
+								</b>
+								{{ results[result][0][2] }}
+							</p>
+						</div>
+						{% for key, value in results[result][1].items() %}
+							<div>
+								<p>
+									{{ key }}
+									<b>
+										{{ value }}
+									</b>
+								</p>
+							</div>
+						{% endfor %}
+					</div>
+				{% endfor %}
+			</div>
+			<div id="to_search_button">
+				<form method="post">
+					<button type="submit" name="to_search" id="to_search">
+						<p style="padding-left: 0; padding: 3px;">
+							<b>
+								To search
+							</b>
+						</p>
+					</button>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

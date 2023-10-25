@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Search</title>
+		<style>
+			body {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin: 0;
+				height: 90vh;
+			}
+			p {
+				padding-left: 1.5vw;
+				color: white;
+				margin: 0.3rem;
+			}
+			h1 {
+				margin-bottom: 10px;
+				justify-content: center;
+				display: flex;
+			}
+			h2 {
+				margin-bottom: 10px;
+				flex: 1;
+			}
+			input {
+				border-width: 0;
+				border-radius: 0.3rem;
+			}
+			select {
+				border-width: 0;
+				border-radius: 0.3rem;
+			}
+			.lemmaInput, .tokenInput, .posInput {
+				box-sizing: border-box;
+				width: 100%;
+			}
+			.query_form {
+				gap: 5px;
+				display: grid;
+			}
+			.lemma, .token, .pos {
+				background-color: #9693E2;
+				border-radius: 1rem;
+				padding: 0.1rem 0.3rem;
+			}
+			#query {
+				display: flex;
+				gap: 5px;
+			}
+			button {
+				background-color: #504D9C;
+				border-radius: 1rem;
+				border-width: 0;
+				padding: 0.1rem 0.3rem;
+				margin-top: 5%;
+			}
+			#search {
+				justify-content: center;
+				display: flex;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<h1>
+				Search Page
+			</h1>
+			<form method="post">
+				<div id='query'>
+					<div class=query_form id='query_form_0'>
+						<div style="display: flex;">
+							<h2>
+								Word
+							</h2>
+							<button type="button" style="display: flex; height: 18px;" id=delete_button_0 onclick=deleteElement(this.id)>
+								<p style="padding-left: 0; margin: 0;">
+									<b>
+										–
+									</b>
+								</p>
+							</button>
+							<button type="button" style="display: flex; height: 18px;" id=copy_button_0 onclick=copyElement('query_form')>
+								<p style="padding-left: 0; margin: 0;">
+									<b>
+										+
+									</b>
+								</p>
+							</button>
+						</div>
+						<div class=lemma id='lemma_0'>
+							<p>
+								<b>
+									Lemma:
+								</b>
+							</p>
+							<input type="text" class=lemmaInput name="lemmaInput_0" id="lemmaInput_0" value="">
+							<div><br></div>
+						</div>
+						<div class=token id='token_0'>
+							<p>
+								<b>
+									Token:
+								</b>
+							</p>
+							<input type="text" class=tokenInput name="tokenInput_0" id="tokenInput_0" value="">
+							<div><br></div>
+						</div>
+						<div class=pos id='pos_0'>
+							<p>
+								<b>
+									Part of speech:
+								</b>
+							</p>
+							<select class=posInput name="posInput_0" id="posInput_0">
+								<option value=""></option>
+								{% for pos in range(0, poses|length) %}
+									<td>{{ poses[pos] }}</td>
+									<option value={{ poses[pos] }}>{{ poses[pos] }}</option>
+								{% endfor %}
+							</select>
+							<div><br></div>
+						</div>
+					</div>
+				</div>
+				<button type="submit" name="search" id="search">
+					<p style="padding-left: 0; padding: 3px;">
+						<b>
+							Search
+						</b>
+					</p>
+				</button>
+			</form>
+		</div>
+		<script>
+			function deleteElement(buttonId) {
+				const numId = buttonId.charAt(buttonId.length - 1);
+				var parentElement = document.getElementById('query');
+				var element = document.getElementById('query_form_' + numId);
+				if (parentElement && element) {
+					parentElement.removeChild(element);
+				}
+				var elmentsToChange = document.getElementsByClassName('query_form')
+				for (const elmentToChange of elmentsToChange) {
+					const currentId = elmentToChange.id
+					const lastCharacter = currentId.charAt(currentId.length - 1);
+					if (lastCharacter > numId) {
+						updateIds(elmentToChange, -1)
+					}
+				}
+			}
+			
+			function updateIds(element, diff) {
+				if (element.id) {
+					const currentId = element.id
+					const lastCharacter = currentId.charAt(currentId.length - 1);
+					const newNumber = parseInt(lastCharacter, 10) + parseInt(diff, 10);
+					const newId = currentId.slice(0, -1) + newNumber;
+					element.id = newId;
+					element.name = newId
+					if (diff == 1) {
+						if (element.value) {
+							element.value = "";
+						}
+					}
+				}
+				if (element.children) {
+					for (const child of element.children) {
+						updateIds(child, diff);
+					}
+				}
+			}
+				
+			function copyElement(ClassName) {
+				var count = document.getElementsByClassName(ClassName).length;
+				var elementIdOld = ClassName + "_" + (count - 1)
+				const originalElement = document.getElementById(elementIdOld);
+				const clonedElement = originalElement.cloneNode(true);
+				updateIds(clonedElement, 1);
+				const targetElement = document.getElementById('query');
+				targetElement.appendChild(clonedElement);
+			}
+		</script>
+	</body>
+</html>
