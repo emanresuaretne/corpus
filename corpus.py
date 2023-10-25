@@ -27,7 +27,7 @@ os.chdir(cwd)
 def site():
     return redirect(url_for('search'))
 
-# страница поиска
+# страница поиска и как он происходит
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
@@ -46,7 +46,7 @@ def search():
         return redirect(url_for("results", query=str(query)))
     return render_template("search.html", poses=list(poses))
 
-
+# выдача результатов и страница результатов
 @app.route('/results/<query>', methods=['GET', 'POST'])
 def results(query):
     query = eval(query)
@@ -56,12 +56,12 @@ def results(query):
             if len(sentence) >= len(query):
                 for _ in range(len(sentence)):
                     if len(sentence[_:]) >= len(query):
-                        contexts = [sentence[:_], sentence[_:][:len(query)], sentence[_:][len(query):]]
-                        if contexts[1]:
-                            if all(all(d1[k] == v for k, v in d2.items() if v) for d1, d2 in zip(contexts[1], query)):
+                        contexts = [sentence[:_], sentence[_:][:len(query)], sentence[_:][len(query):]] # рассматриваем левые и правые контексты тоже
+                        if contexts[1]:          # дальше убираем чувствительность к регистру и проверяем инфу о токене на предмет соответствия запросу
+                            if all(all(d1[k].lower() == v.lower() for k, v in d2.items() if v) for d1, d2 in zip(contexts[1], query)):  
                                 query_res.append((
-                                    [TreebankWordDetokenizer().detokenize([word["token"] for word in s])
-                                     for s in contexts],
+                                    [TreebankWordDetokenizer().detokenize([word["token"] for word in s]) 
+                                     for s in contexts],          # собираем обратно список токенов в предложение при помощи функции из nltk
                                     book["meta"]
                                 ))
         if request.method == 'POST':
