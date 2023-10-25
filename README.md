@@ -16,3 +16,4 @@ gutenberg.org > frequently dowloaded <br>
 ##### Использованные библиотеки: 
 1. Предобработка текстов: BeautifulSoup
 2. Морфологический анализ: SpaCy
+3. Хранение информации: jsonlines
