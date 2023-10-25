@@ -42,7 +42,7 @@ for en, _ in tqdm(enumerate(books_nums)):
                     start = n
                 if fragment.startswith(" END"):
                     end = n
-                if any(key in fragment for key in book["meta"].keys()) \
+                if any(key in fragment for key in book["meta"].keys()) \        # исключаем случаи, когда метаинформация случайно перезаполняется по мере парсинга книги
                         and all(not value for value in book["meta"].values()):
                     for line in fragment.split("\n"):
                         if any(at in line for at in book["meta"].keys()):
